@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-billing_account = "00584D-616AD1-DBFCA2"
-project_id      = "mystudies-dev1-devops"
-state_bucket    = "mystudies-dev1-terraform-state"
-terraform_root  = "deployment/terraform"
-build_viewers = [
-  "group:mystudies-dev1-cicd-viewers@jcloudce.com",
-]
+output "project_id" {
+  value = module.project.project_id
+}
+
+output "project_number" {
+  value = module.project.project_number
+}
