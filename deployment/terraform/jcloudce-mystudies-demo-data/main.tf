@@ -87,7 +87,7 @@ module "jcloudce_mystudies_demo_mystudies_firestore_data" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id = "jcloudce-mystudies_demo_mystudies_firestore_data"
+  dataset_id = "jcloudce_mystudies_demo_mystudies_firestore_data"
   project_id = module.project.project_id
   location   = "us-east1"
 }

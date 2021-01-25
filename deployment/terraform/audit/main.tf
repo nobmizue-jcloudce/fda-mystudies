@@ -74,7 +74,7 @@ module "bigquery_destination" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id                  = "jcloudce-mystudies_demo_1yr_audit_logs"
+  dataset_id                  = "jcloudce_mystudies_demo_1yr_audit_logs"
   project_id                  = module.project.project_id
   location                    = "us-east1"
   default_table_expiration_ms = 365 * 8.64 * pow(10, 7) # 365 days
