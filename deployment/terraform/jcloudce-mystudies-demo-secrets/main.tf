@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "mystudies-dev1-terraform-state"
-    prefix = "mystudies-dev1-secrets"
+    bucket = "jcloudce-mystudies-demo-terraform-state"
+    prefix = "jcloudce-mystudies-demo-secrets"
   }
 }
 
@@ -91,9 +91,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "mystudies-dev1-secrets"
+  name                    = "jcloudce-mystudies-demo-secrets"
   org_id                  = ""
-  folder_id               = "296946598967"
+  folder_id               = "833975824040"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"

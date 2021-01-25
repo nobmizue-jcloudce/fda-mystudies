@@ -19,14 +19,14 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "mystudies-dev1-terraform-state"
-    prefix = "mystudies-dev1-apps"
+    bucket = "jcloudce-mystudies-demo-terraform-state"
+    prefix = "jcloudce-mystudies-demo-apps"
   }
 }
 
 # Reserve a static external IP for the Ingress.
 resource "google_compute_global_address" "ingress_static_ip" {
-  name         = "mystudies-dev1-ingress-ip"
+  name         = "jcloudce-mystudies-demo-ingress-ip"
   description  = "Reserved static external IP for the GKE cluster Ingress and DNS configurations."
   address_type = "EXTERNAL" # This is the default, but be explicit because it's important.
   project      = module.project.project_id
@@ -64,8 +64,8 @@ resource "google_compute_global_address" "ingress_static_ip" {
 #7#
 #7#   github {
 #7#     owner = "nobmizue-jcloudce"
-#7#     name  = "mystudies"
-#7#     push { branch = "^master$" }
+#7#     name  = "fda-mystudies"
+#7#     push { branch = "^develop$" }
 #7#   }
 
 #7#   filename = "${each.key}/cloudbuild.yaml"
@@ -78,16 +78,16 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
   version = "~> 9.1.0"
 
-  name                    = "mystudies-dev1-apps"
+  name                    = "jcloudce-mystudies-demo-apps"
   org_id                  = ""
-  folder_id               = "296946598967"
+  folder_id               = "833975824040"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
-  shared_vpc              = "mystudies-dev1-networks"
+  shared_vpc              = "jcloudce-mystudies-demo-networks"
   shared_vpc_subnets = [
-    "projects/mystudies-dev1-networks/regions/asia-northeast1/subnetworks/mystudies-dev1-gke-subnet",
+    "projects/jcloudce-mystudies-demo-networks/regions/asia-northeast1/subnetworks/jcloudce-mystudies-demo-gke-subnet",
   ]
   activate_apis = [
     "binaryauthorization.googleapis.com",
@@ -150,13 +150,13 @@ resource "google_binary_authorization_policy" "policy" {
   }
 }
 
-module "mystudies_dev1" {
+module "jcloudce_mystudies_demo" {
   source  = "terraform-google-modules/cloud-dns/google"
   version = "~> 3.0.0"
 
-  name       = "mystudies-dev1"
+  name       = "jcloudce-mystudies-demo"
   project_id = module.project.project_id
-  domain     = "mystudies-dev1.jcloudce.com."
+  domain     = "jcloudce-mystudies-demo.jcloudce.com."
   type       = "public"
 
   recordsets = [
@@ -175,21 +175,21 @@ module "mystudies_dev1" {
   ]
 }
 
-module "mystudies_dev1_gke_cluster" {
+module "jcloudce_mystudies_demo_gke_cluster" {
   source  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
   version = "~> 11.1.0"
 
   # Required.
-  name               = "mystudies-dev1-gke-cluster"
+  name               = "jcloudce-mystudies-demo-gke-cluster"
   project_id         = module.project.project_id
   region             = "asia-northeast1"
   regional           = true
-  network_project_id = "mystudies-dev1-networks"
+  network_project_id = "jcloudce-mystudies-demo-networks"
 
-  network                = "mystudies-dev1-network"
-  subnetwork             = "mystudies-dev1-gke-subnet"
-  ip_range_pods          = "mystudies-dev1-pods-range"
-  ip_range_services      = "mystudies-dev1-services-range"
+  network                = "jcloudce-mystudies-demo-network"
+  subnetwork             = "jcloudce-mystudies-demo-gke-subnet"
+  ip_range_pods          = "jcloudce-mystudies-demo-pods-range"
+  ip_range_services      = "jcloudce-mystudies-demo-services-range"
   master_ipv4_cidr_block = "192.168.0.0/28"
   master_authorized_networks = [
     {
@@ -213,16 +213,16 @@ module "project_iam_members" {
 
   bindings = {
     "roles/logging.logWriter" = [
-      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.hydra_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.response_datastore_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.study_datastore_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.consent_datastore_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.enroll_datastore_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.user_datastore_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@mystudies-dev1-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.auth_server_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.hydra_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.response_datastore_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_builder_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.study_datastore_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.consent_datastore_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.enroll_datastore_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.user_datastore_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.participant_manager_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:${google_service_account.triggers_pubsub_handler_gke_sa.account_id}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
     ],
   }
 }

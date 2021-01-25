@@ -13,5 +13,5 @@
 # limitations under the License.
 
 
-folder         = "folders/296946598967"
-auditors_group = "mystudies-dev1-auditors@jcloudce.com"
+folder         = "folders/833975824040"
+auditors_group = "jcloudce-mystudies-demo-auditors@jcloudce.com"

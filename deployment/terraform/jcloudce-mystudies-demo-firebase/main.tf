@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "mystudies-dev1-terraform-state"
-    prefix = "mystudies-dev1-firebase"
+    bucket = "jcloudce-mystudies-demo-terraform-state"
+    prefix = "jcloudce-mystudies-demo-firebase"
   }
 }
 
@@ -54,9 +54,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "mystudies-dev1-firebase"
+  name                    = "jcloudce-mystudies-demo-firebase"
   org_id                  = ""
-  folder_id               = "296946598967"
+  folder_id               = "833975824040"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
@@ -78,11 +78,11 @@ module "project_iam_members" {
       "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
     ],
     "roles/datastore.user" = [
-      "serviceAccount:response-datastore-gke-sa@mystudies-dev1-apps.iam.gserviceaccount.com",
-      "serviceAccount:triggers-pubsub-handler-gke-sa@mystudies-dev1-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [
-      "serviceAccount:triggers-pubsub-handler-gke-sa@mystudies-dev1-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
     ],
   }
 }
@@ -117,11 +117,11 @@ resource "google_service_account" "real_time_triggers" {
   project    = module.project.project_id
 }
 
-module "mystudies_dev1_mystudies_firestore_raw_data" {
+module "jcloudce_mystudies_demo_mystudies_firestore_raw_data" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "mystudies-dev1-mystudies-firestore-raw-data"
+  name       = "jcloudce-mystudies-demo-mystudies-firestore-raw-data"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 
