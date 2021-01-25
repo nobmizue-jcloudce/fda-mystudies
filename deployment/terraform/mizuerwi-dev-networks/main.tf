@@ -19,15 +19,15 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "jcloudce-mystudies-demo-terraform-state"
-    prefix = "jcloudce-mystudies-demo-networks"
+    bucket = "mizuerwi-dev-terraform-state"
+    prefix = "mizuerwi-dev-networks"
   }
 }
 
 resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
   name        = "fw-allow-k8s-ingress-lb-health-checks"
   description = "GCE L7 firewall rule"
-  network     = module.jcloudce-mystudies_demo_network.network.network.self_link
+  network     = module.mizuerwi_dev_network.network.network.self_link
   project     = module.project.project_id
 
   allow {
@@ -56,8 +56,8 @@ resource "google_compute_firewall" "fw_allow_k8s_ingress_lb_health_checks" {
   ]
 
   target_tags = [
-    "gke-jcloudce-mystudies-demo-gke-cluster",
-    "gke-jcloudce-mystudies-demo-gke-cluster-default-node-pool",
+    "gke-mizuerwi-dev-gke-cluster",
+    "gke-mizuerwi-dev-gke-cluster-default-node-pool",
   ]
 }
 
@@ -68,9 +68,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "jcloudce-mystudies-demo-networks"
+  name                    = "mizuerwi-dev-networks"
   org_id                  = ""
-  folder_id               = "833975824040"
+  folder_id               = "684630886159"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
@@ -96,9 +96,9 @@ module "bastion_vm" {
   project      = module.project.project_id
   zone         = "asia-northeast1-b"
   host_project = module.project.project_id
-  network      = module.jcloudce-mystudies_demo_network.network.network.self_link
-  subnet       = module.jcloudce-mystudies_demo_network.subnets["asia-northeast1/jcloudce-mystudies-demo-bastion-subnet"].self_link
-  members      = ["group:jcloudce-mystudies-demo-bastion-accessors@jcloudce.com"]
+  network      = module.mizuerwi_dev_network.network.network.self_link
+  subnet       = module.mizuerwi_dev_network.subnets["asia-northeast1/mizuerwi-dev-bastion-subnet"].self_link
+  members      = ["group:mizuerwi-dev-bastion-accessors@jcloudce.com"]
   image_family = "ubuntu-2004-lts"
 
   image_project = "ubuntu-os-cloud"
@@ -115,16 +115,16 @@ sudo chmod +x /usr/local/bin/cloud_sql_proxy
 EOF
 }
 
-module "jcloudce_mystudies_demo_network" {
+module "mizuerwi_dev_network" {
   source  = "terraform-google-modules/network/google"
   version = "~> 2.5.0"
 
-  network_name = "jcloudce-mystudies-demo-network"
+  network_name = "mizuerwi-dev-network"
   project_id   = module.project.project_id
 
   subnets = [
     {
-      subnet_name           = "jcloudce-mystudies-demo-bastion-subnet"
+      subnet_name           = "mizuerwi-dev-bastion-subnet"
       subnet_ip             = "10.0.128.0/24"
       subnet_region         = "asia-northeast1"
       subnet_flow_logs      = true
@@ -132,7 +132,7 @@ module "jcloudce_mystudies_demo_network" {
     },
 
     {
-      subnet_name           = "jcloudce-mystudies-demo-gke-subnet"
+      subnet_name           = "mizuerwi-dev-gke-subnet"
       subnet_ip             = "10.0.0.0/17"
       subnet_region         = "asia-northeast1"
       subnet_flow_logs      = true
@@ -141,49 +141,49 @@ module "jcloudce_mystudies_demo_network" {
 
   ]
   secondary_ranges = {
-    "jcloudce-mystudies-demo-gke-subnet" = [
+    "mizuerwi-dev-gke-subnet" = [
       {
-        range_name    = "jcloudce-mystudies-demo-pods-range"
+        range_name    = "mizuerwi-dev-pods-range"
         ip_cidr_range = "172.16.0.0/14"
       },
       {
-        range_name    = "jcloudce-mystudies-demo-services-range"
+        range_name    = "mizuerwi-dev-services-range"
         ip_cidr_range = "172.20.0.0/14"
       },
     ],
   }
 }
 
-module "cloud_sql_private_service_access_jcloudce_mystudies_demo_network" {
+module "cloud_sql_private_service_access_mizuerwi_dev_network" {
   source  = "GoogleCloudPlatform/sql-db/google//modules/private_service_access"
   version = "~> 4.1.0"
 
   project_id  = module.project.project_id
-  vpc_network = module.jcloudce_mystudies_demo_network.network_name
+  vpc_network = module.mizuerwi_dev_network.network_name
 }
 
-module "jcloudce_mystudies_demo_router" {
+module "mizuerwi_dev_router" {
   source  = "terraform-google-modules/cloud-router/google"
   version = "~> 0.2.0"
 
-  name    = "jcloudce-mystudies-demo-router"
+  name    = "mizuerwi-dev-router"
   project = module.project.project_id
   region  = "asia-northeast1"
-  network = module.jcloudce-mystudies_demo_network.network.network.self_link
+  network = module.mizuerwi_dev_network.network.network.self_link
 
   nats = [
     {
-      name                               = "jcloudce-mystudies-demo-nat"
+      name                               = "mizuerwi-dev-nat"
       source_subnetwork_ip_ranges_to_nat = "LIST_OF_SUBNETWORKS"
 
       subnetworks = [
         {
-          name                     = "${module.jcloudce-mystudies_demo_network.subnets["asia-northeast1/jcloudce-mystudies-demo-bastion-subnet"].self_link}"
+          name                     = "${module.mizuerwi_dev_network.subnets["asia-northeast1/mizuerwi-dev-bastion-subnet"].self_link}"
           source_ip_ranges_to_nat  = ["PRIMARY_IP_RANGE"]
           secondary_ip_range_names = []
         },
         {
-          name                     = "${module.jcloudce-mystudies_demo_network.subnets["asia-northeast1/jcloudce-mystudies-demo-gke-subnet"].self_link}"
+          name                     = "${module.mizuerwi_dev_network.subnets["asia-northeast1/mizuerwi-dev-gke-subnet"].self_link}"
           source_ip_ranges_to_nat  = ["ALL_IP_RANGES"]
           secondary_ip_range_names = []
         },

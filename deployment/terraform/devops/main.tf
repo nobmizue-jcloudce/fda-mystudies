@@ -27,10 +27,6 @@ terraform {
     google      = "~> 3.0"
     google-beta = "~> 3.0"
   }
-  backend "gcs" {
-    bucket = "jcloudce-mystudies-demo-terraform-state"
-    prefix = "devops"
-  }
 }
 
 # Create the project, enable APIs, and create the deletion lien, if specified.
@@ -38,9 +34,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "jcloudce-mystudies-demo-devops"
+  name                    = "mizuerwi-dev-devops"
   org_id                  = ""
-  folder_id               = "833975824040"
+  folder_id               = "684630886159"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
@@ -59,7 +55,7 @@ module "state_bucket" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "jcloudce-mystudies-demo-terraform-state"
+  name       = "mizuerwi-dev-terraform-state"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 }
@@ -68,12 +64,12 @@ module "state_bucket" {
 resource "google_project_iam_binding" "devops_owners" {
   project = module.project.project_id
   role    = "roles/owner"
-  members = ["group:jcloudce-mystudies-demo-devops-owners@jcloudce.com"]
+  members = ["group:mizuerwi-dev-devops-owners@jcloudce.com"]
 }
 
 # Org level IAM permissions for org admins.
 resource "google_folder_iam_member" "admin" {
-  folder = "folders/833975824040"
+  folder = "folders/684630886159"
   role   = "roles/resourcemanager.folderAdmin"
-  member = "group:jcloudce-mystudies-demo-folder-admins@jcloudce.com"
+  member = "group:mizuerwi-dev-folder-admins@jcloudce.com"
 }

@@ -19,7 +19,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "jcloudce-mystudies-demo-terraform-state"
+    bucket = "mizuerwi-dev-terraform-state"
     prefix = "kubernetes"
   }
 }
@@ -27,9 +27,9 @@ terraform {
 data "google_client_config" "default" {}
 
 data "google_container_cluster" "gke_cluster" {
-  name     = "jcloudce-mystudies-demo-gke-cluster"
+  name     = "mizuerwi-dev-gke-cluster"
   location = "asia-northeast1"
-  project  = "jcloudce-mystudies-demo-apps"
+  project  = "mizuerwi-dev-apps"
 }
 
 provider "kubernetes" {
@@ -79,7 +79,7 @@ locals {
 # Data sources from Secret Manager.
 data "google_secret_manager_secret_version" "secrets" {
   provider = google-beta
-  project  = "jcloudce-mystudies-demo-secrets"
+  project  = "mizuerwi-dev-secrets"
   secret   = each.key
 
   for_each = toset(concat(
@@ -129,12 +129,12 @@ resource "kubernetes_secret" "shared_secrets" {
   }
 
   data = {
-    consent_bucket_name               = "jcloudce-mystudies-demo-mystudies-consent-documents"
-    study_resources_bucket_name       = "jcloudce-mystudies-demo-mystudies-study-resources"
-    institution_resources_bucket_name = "jcloudce-mystudies-demo-mystudies-institution-resources"
-    base_url                          = "https://participants.jcloudce-mystudies-demo.jcloudce.com"
-    studies_base_url                  = "https://studies.jcloudce-mystudies-demo.jcloudce.com"
-    firestore_project_id              = "jcloudce-mystudies-demo-firebase"
+    consent_bucket_name               = "mizuerwi-dev-mystudies-consent-documents"
+    study_resources_bucket_name       = "mizuerwi-dev-mystudies-study-resources"
+    institution_resources_bucket_name = "mizuerwi-dev-mystudies-institution-resources"
+    base_url                          = "https://participants.mizuerwi-dev.jcloudce.com"
+    studies_base_url                  = "https://studies.mizuerwi-dev.jcloudce.com"
+    firestore_project_id              = "mizuerwi-dev-firebase"
     log_path                          = data.google_secret_manager_secret_version.secrets["manual-log-path"].secret_data
     org_name                          = data.google_secret_manager_secret_version.secrets["manual-org-name"].secret_data
     terms_url                         = data.google_secret_manager_secret_version.secrets["manual-terms-url"].secret_data
@@ -239,7 +239,7 @@ resource "kubernetes_secret" "email_credentials" {
 resource "google_service_account_key" "apps_service_account_keys" {
   for_each = toset(local.service_account_ids)
 
-  service_account_id = "${each.key}@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com"
+  service_account_id = "${each.key}@mizuerwi-dev-apps.iam.gserviceaccount.com"
 }
 
 resource "kubernetes_secret" "apps_gcloud_keys" {

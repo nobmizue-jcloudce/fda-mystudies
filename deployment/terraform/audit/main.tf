@@ -19,7 +19,7 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "jcloudce-mystudies-demo-terraform-state"
+    bucket = "mizuerwi-dev-terraform-state"
     prefix = "audit"
   }
 }
@@ -31,9 +31,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "jcloudce-mystudies-demo-audit"
+  name                    = "mizuerwi-dev-audit"
   org_id                  = ""
-  folder_id               = "833975824040"
+  folder_id               = "684630886159"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
@@ -74,7 +74,7 @@ module "bigquery_destination" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id                  = "jcloudce_mystudies_demo_1yr_audit_logs"
+  dataset_id                  = "mizuerwi_dev_1yr_audit_logs"
   project_id                  = module.project.project_id
   location                    = "us-east1"
   default_table_expiration_ms = 365 * 8.64 * pow(10, 7) # 365 days
@@ -109,7 +109,7 @@ module "storage_destination" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.7.0"
 
-  name          = "jcloudce-mystudies-demo-7yr-audit-logs"
+  name          = "mizuerwi-dev-7yr-audit-logs"
   project_id    = module.project.project_id
   location      = "asia-northeast1"
   storage_class = "COLDLINE"

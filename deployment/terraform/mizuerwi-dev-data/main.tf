@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "jcloudce-mystudies-demo-terraform-state"
-    prefix = "jcloudce-mystudies-demo-data"
+    bucket = "mizuerwi-dev-terraform-state"
+    prefix = "mizuerwi-dev-data"
   }
 }
 
@@ -40,7 +40,7 @@ locals {
 
 data "google_secret_manager_secret_version" "db_secrets" {
   provider = google-beta
-  project  = "jcloudce-mystudies-demo-secrets"
+  project  = "mizuerwi-dev-secrets"
   secret   = each.key
 
   for_each = toset(concat(
@@ -67,14 +67,14 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google//modules/shared_vpc"
   version = "~> 9.1.0"
 
-  name                    = "jcloudce-mystudies-demo-data"
+  name                    = "mizuerwi-dev-data"
   org_id                  = ""
-  folder_id               = "833975824040"
+  folder_id               = "684630886159"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
   skip_gcloud_download    = true
-  shared_vpc              = "jcloudce-mystudies-demo-networks"
+  shared_vpc              = "mizuerwi-dev-networks"
   activate_apis = [
     "bigquery.googleapis.com",
     "compute.googleapis.com",
@@ -83,11 +83,11 @@ module "project" {
   ]
 }
 
-module "jcloudce_mystudies_demo_mystudies_firestore_data" {
+module "mizuerwi_dev_mystudies_firestore_data" {
   source  = "terraform-google-modules/bigquery/google"
   version = "~> 4.3.0"
 
-  dataset_id = "jcloudce_mystudies_demo_mystudies_firestore_data"
+  dataset_id = "mizuerwi_dev_mystudies_firestore_data"
   project_id = module.project.project_id
   location   = "us-east1"
 }
@@ -102,7 +102,7 @@ module "mystudies" {
   zone              = "b"
   availability_type = "REGIONAL"
   database_version  = "MYSQL_5_7"
-  vpc_network       = "projects/jcloudce-mystudies-demo-networks/global/networks/jcloudce-mystudies-demo-network"
+  vpc_network       = "projects/mizuerwi-dev-networks/global/networks/mizuerwi-dev-network"
   user_password     = data.google_secret_manager_secret_version.db_secrets["auto-mystudies-sql-default-user-password"].secret_data
 }
 
@@ -115,58 +115,58 @@ module "project_iam_members" {
 
   bindings = {
     "roles/bigquery.dataEditor" = [
-      "serviceAccount:jcloudce-mystudies-demo-firebase@appspot.gserviceaccount.com",
+      "serviceAccount:mizuerwi-dev-firebase@appspot.gserviceaccount.com",
     ],
     "roles/bigquery.jobUser" = [
-      "serviceAccount:jcloudce-mystudies-demo-firebase@appspot.gserviceaccount.com",
+      "serviceAccount:mizuerwi-dev-firebase@appspot.gserviceaccount.com",
     ],
     "roles/cloudsql.client" = [
-      "serviceAccount:bastion@jcloudce-mystudies-demo-networks.iam.gserviceaccount.com",
-      "serviceAccount:auth-server-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:hydra-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:response-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-builder-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:study-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:consent-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:enroll-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:user-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:participant-manager-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:triggers-pubsub-handler-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:bastion@mizuerwi-dev-networks.iam.gserviceaccount.com",
+      "serviceAccount:auth-server-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:hydra-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-builder-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:study-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:consent-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:enroll-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:user-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:participant-manager-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
     ],
   }
 }
 
-module "jcloudce_mystudies_demo_mystudies_consent_documents" {
+module "mizuerwi_dev_mystudies_consent_documents" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "jcloudce-mystudies-demo-mystudies-consent-documents"
+  name       = "mizuerwi-dev-mystudies-consent-documents"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 
   iam_members = [
     {
-      member = "serviceAccount:consent-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:consent-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
     {
-      member = "serviceAccount:participant-manager-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:participant-manager-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
   ]
 }
 
-module "jcloudce_mystudies_demo_mystudies_study_resources" {
+module "mizuerwi_dev_mystudies_study_resources" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "jcloudce-mystudies-demo-mystudies-study-resources"
+  name       = "mizuerwi-dev-mystudies-study-resources"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 
   iam_members = [
     {
-      member = "serviceAccount:study-builder-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com"
+      member = "serviceAccount:study-builder-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com"
       role   = "roles/storage.objectAdmin"
     },
     {
@@ -176,11 +176,11 @@ module "jcloudce_mystudies_demo_mystudies_study_resources" {
   ]
 }
 
-module "jcloudce_mystudies_demo_mystudies_sql_import" {
+module "mizuerwi_dev_mystudies_sql_import" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "jcloudce-mystudies-demo-mystudies-sql-import"
+  name       = "mizuerwi-dev-mystudies-sql-import"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 

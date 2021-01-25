@@ -19,11 +19,11 @@ set -ex
 MODULES=(
   devops
   audit
-  jcloudce-mystudies-demo-secrets
-  jcloudce-mystudies-demo-networks
-  jcloudce-mystudies-demo-apps
-  jcloudce-mystudies-demo-firebase
-  jcloudce-mystudies-demo-data
+  mizuerwi-dev-secrets
+  mizuerwi-dev-networks
+  mizuerwi-dev-apps
+  mizuerwi-dev-firebase
+  mizuerwi-dev-data
 )
 
 ACTIONS=()

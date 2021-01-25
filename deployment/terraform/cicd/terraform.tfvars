@@ -13,9 +13,9 @@
 # limitations under the License.
 
 billing_account = "00584D-616AD1-DBFCA2"
-project_id      = "jcloudce-mystudies-demo-devops"
-state_bucket    = "jcloudce-mystudies-demo-terraform-state"
+project_id      = "mizuerwi-dev-devops"
+state_bucket    = "mizuerwi-dev-terraform-state"
 terraform_root  = "deployment/terraform"
 build_viewers = [
-  "group:jcloudce-mystudies-demo-cicd-viewers@jcloudce.com",
+  "group:mizuerwi-dev-cicd-viewers@jcloudce.com",
 ]

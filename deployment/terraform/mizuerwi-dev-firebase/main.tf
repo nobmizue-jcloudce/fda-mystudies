@@ -19,8 +19,8 @@ terraform {
     google-beta = "~> 3.0"
   }
   backend "gcs" {
-    bucket = "jcloudce-mystudies-demo-terraform-state"
-    prefix = "jcloudce-mystudies-demo-firebase"
+    bucket = "mizuerwi-dev-terraform-state"
+    prefix = "mizuerwi-dev-firebase"
   }
 }
 
@@ -54,9 +54,9 @@ module "project" {
   source  = "terraform-google-modules/project-factory/google"
   version = "~> 9.1.0"
 
-  name                    = "jcloudce-mystudies-demo-firebase"
+  name                    = "mizuerwi-dev-firebase"
   org_id                  = ""
-  folder_id               = "833975824040"
+  folder_id               = "684630886159"
   billing_account         = "00584D-616AD1-DBFCA2"
   lien                    = true
   default_service_account = "keep"
@@ -78,11 +78,11 @@ module "project_iam_members" {
       "serviceAccount:${google_firebase_project.firebase.project}@appspot.gserviceaccount.com",
     ],
     "roles/datastore.user" = [
-      "serviceAccount:response-datastore-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
-      "serviceAccount:triggers-pubsub-handler-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:response-datastore-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
     ],
     "roles/pubsub.subscriber" = [
-      "serviceAccount:triggers-pubsub-handler-gke-sa@jcloudce-mystudies-demo-apps.iam.gserviceaccount.com",
+      "serviceAccount:triggers-pubsub-handler-gke-sa@mizuerwi-dev-apps.iam.gserviceaccount.com",
     ],
   }
 }
@@ -117,11 +117,11 @@ resource "google_service_account" "real_time_triggers" {
   project    = module.project.project_id
 }
 
-module "jcloudce_mystudies_demo_mystudies_firestore_raw_data" {
+module "mizuerwi_dev_mystudies_firestore_raw_data" {
   source  = "terraform-google-modules/cloud-storage/google//modules/simple_bucket"
   version = "~> 1.4"
 
-  name       = "jcloudce-mystudies-demo-mystudies-firestore-raw-data"
+  name       = "mizuerwi-dev-mystudies-firestore-raw-data"
   project_id = module.project.project_id
   location   = "asia-northeast1"
 
