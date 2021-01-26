@@ -184,4 +184,10 @@ module "mizuerwi_dev_mystudies_sql_import" {
   project_id = module.project.project_id
   location   = "asia-northeast1"
 
+  iam_members = [
+    {
+      member = "serviceAccount:${module.mystudies.instance_service_account_email_address}"
+      role   = "roles/storage.objectViewer"
+    },
+  ]
 }
