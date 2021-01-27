@@ -6,15 +6,15 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: mizuerwi-dev-cert-participants
+  name: <PREFIX>-<ENV>-cert-participants
 spec:
   domains:
-    - participants.mizuerwi-dev.jcloudce.com
+    - participants.<PREFIX>-<ENV>.<DOMAIN>
 ---
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: mizuerwi-dev-cert-studies
+  name: <PREFIX>-<ENV>-cert-studies
 spec:
   domains:
-    - studies.mizuerwi-dev.jcloudce.com
+    - studies.<PREFIX>-<ENV>.<DOMAIN>
