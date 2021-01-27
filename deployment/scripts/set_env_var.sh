@@ -9,11 +9,11 @@
 
 # PREFIX is a name you choose for your deployment that will be prepended to various
 # directories, cloud resources and URLs (for example this could be `mystudies`)
-export PREFIX=mizuerwi
+export PREFIX=mystudies
 
 # ENV is a label you choose that will be appended to PREFIX in your directories
 # and cloud resources (for example this could be `dev`, `test` or `prod`)
-export ENV=dev
+export ENV=dev1
 
 # GIT_ROOT is the local path to the root of your cloned FDA MyStudies repository
 export GIT_ROOT=/home/nobmizue/repo/fda-mystudies
